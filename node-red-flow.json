@@ -1,0 +1,239 @@
+[
+  {
+    "id": "48ddb88.87e3e48",
+    "type": "tab",
+    "label": "Thermiq",
+    "disabled": false,
+    "info": "#!/opt/bin/php\r\n<?php\r\n/* SVN FILE: $Id: hp_data.com 347 2013-01-03 16:06:30Z anders $\r\n* Project Name : ThermIQ\r\n* @version $Revision: 347 $ \r\n* @lastrevision $Date: 2013-01-03 17:06:30 +0100 (to, 03 jan 2013) $\r\n* @modifiedby $LastChangedBy: anders $\r\n* @lastmodified $LastChangedDate: 2013-01-03 17:06:30 +0100 (to, 03 jan 2013) $\r\n*/\r\nif (!isset($settings)) {\r\n\tinclude(\"common_settings\");\r\n}\r\n\r\n\r\n    function prune_argv($options_array)\r\n    {\r\n        foreach( $options_array as $o => $a )\r\n        {\r\n            // Look for all occurrences of option in argv and remove if found :\r\n            // ----------------------------------------------------------------\r\n            // Look for occurrences of -o (simple option with no value) or -o<val> (no space in between):\r\n            while($k=array_search(\"-\".$o.$a,$GLOBALS['argv']))\r\n            {    // If found remove from argv:\r\n                if($k)\r\n                    unset($GLOBALS['argv'][$k]);\r\n            }\r\n            // Look for remaining occurrences of -o <val> (space in between):\r\n            while($k=array_search(\"-\".$o,$GLOBALS['argv']))\r\n            {    // If found remove both option and value from argv:\r\n                if($k)\r\n                {    unset($GLOBALS['argv'][$k]);\r\n                    unset($GLOBALS['argv'][$k+1]);\r\n                }\r\n            }\r\n        }\r\n        // Reindex :\r\n        $GLOBALS['argv']=array_merge($GLOBALS['argv']);\r\n        $GLOBALS['argc']=count($GLOBALS['argv']);\r\n    }\r\n    \r\n    function print_usage() {\r\n\t\t\tprintf(\"\\nhpdata.com\r\n\t\t\t-v\t\tverbose, \r\n\t\t\t-r \t\tdo a read\r\n\t\t\t-w    do a write\r\n\t\t\t-g    get time\r\n\t\t\t-s    set time\r\n\t\t\t-pport\t  Communicate with port (-pCOMx: or -p/dev/ttyUSB0 etc )\r\n\t\t\t-h\t\tis help\\n\");\r\n    }\r\n\r\n\r\n$options=getopt('rwgsvhp:');\r\n// Remove found options leaving the rest in argv array\r\nprune_argv($options);\r\n  //echo \">\\n\";\r\n  //print_r($argv);\r\n  //echo \"<\\n\";\r\n  \r\nif(isset($options[\"h\"]) || isset($options[\"?\"])) {\r\nprint_usage();\r\nexit;\r\n}\r\n\r\n$verbose=false;\r\n if (isset($options[\"v\"])) {\r\n$verbose=TRUE;\r\n\techo(\"hp_data.com is running\\n\");\r\n} else {\r\n\t//error_reporting(0);\r\n}\r\n \r\n  \r\n  if (isset($options[\"p\"])) {\r\n    $comstr = explode(':',$options[\"p\"]);\r\n    if (strlen($comstr[0])>0 ) {\r\n       $device=$comstr[0];\r\n       if ($verbose) echo(\"Using port: \".$device.\"\\n\");\r\n    } else {\r\n       if ($verbose) exit(\"\\nNot enough parameters to hp_data.com: \".$argv.\"\\n\"); else exit();\r\n    }\r\n   }\r\n\r\n   // This is ugly - TODO: Find a general solution for sake of portability\r\n   // Changed timeout to 10 sek in order to handle new bootloaders\r\n   if (strstr(php_uname(),'Linux')) exec(\"$sttypath -F $device clocal cread -parenb -brkint -icrnl -imaxbel -opost -isig -icanon -iexten -echo time 100 min 0 9600 >>/dev/null 2>&1\");\r\n\r\n   \r\n   if (isset($options[\"r\"])) {\r\n  \tif ((($argc == 3) && (is_numeric($argv[1])) && (is_numeric($argv[2])))) {\r\n     $startadr = $argv[1];\r\n     $length =  $argv[2];\r\n     $endadr = $startadr + $length -1;\r\n     if (($startadr <= $endadr) && ($startadr <128) && ($endadr <128)) {\r\n     $a=sprintf(\"%02X\",$startadr);\r\n     $b=sprintf(\"%02X\",$endadr);\r\n     $fp = fopen($device,'r+b');\r\n      if (!$fp) {\r\n    \t\techo \"Unable to open $device\\n\";\r\n\t\t\t} else {\r\n\t\t    fwrite($fp,\"atr$a$b\\r\");\r\n\t\t     sleep(4);\r\n\t\t     $outstr = '';\r\n\t\t       while (!feof($fp)) {\r\n\t\t       $row = fgets($fp,1024);\r\n\t\t         if (strstr($row,'NO')) if ($verbose) exit(\"ERROR\\n\"); else exit();\r\n\t\t         if (strstr($row,'OK')) break;\r\n\t\t         $x = explode('=',rtrim($row));\r\n\t\t           if (isset($x[1])) {\r\n\t\t           $res = hexdec('0x'.$x[1]);\r\n\t\t             if ($res > 32767) $res=$res-65536;\r\n\t\t           $reg = hexdec('0x'.$x[0]);\r\n\t\t           $outstr .= $reg . '=' . $res . '&';\r\n\t\t           }\r\n\t\t       }\r\n\t\t\t     $outstr .= \"\\n\";\r\n\t\t\t     echo $outstr;\r\n\t\t\t     fclose($fp);\r\n\t\t     }\r\n\t\t  }\r\n     exit;\r\n   } \r\n   print_usage();\r\n   exit;\r\n   } else\r\n\r\n   if (isset($options[\"w\"])) {\r\n  \t if ((($argc == 3) && (is_numeric($argv[1])) && (is_numeric($argv[2])))) {\r\n        $startadr = $argv[1] + 128;\r\n        $data = (($argv[2] < 0) ? $argv[2] + 65536 : $argv[2]);\r\n        if (($startadr <= 255) && ($startadr >= 0) && ($data < 65536) && ($data >= 0)) {\r\n           $datahi=($data & 65280) >> 8;\r\n           $datalo=($data & 255);\r\n           $a=sprintf(\"%02X\",$startadr);\r\n\t\t\t     $b=sprintf(\"%02X\",$datalo);\r\n\t\t\t     $c=sprintf(\"%02X\",$datahi);\r\n\t\t\t     $fp=fopen($device,'r+b');\r\n\t\t\t     if (!$fp) {\r\n\t\t    \t    echo \"Unable to open $device\\n\";\r\n\t\t\t\t\t } else {\r\n\t\t\t        fwrite($fp,\"atw$a$c$b\\r\");\r\n\t\t\t        sleep(2);\r\n\t\t\t        $res=fread($fp,80);\r\n\t\t\t        if (!strstr($res,'OK')) if ($verbose) exit(\"ERROR\\n\"); else exit();\r\n\t\t\t        fclose($fp);\r\n\t\t       }\r\n     \t\t\t exit;\r\n     \t\t}\r\n     }\r\n   print_usage();\r\n   exit;\r\n\t } else \r\n\t\r\n   if (isset($options[\"g\"])) {\r\n     if ($argc == 1) {\r\n\t     $fp = fopen($device,'r+b');\r\n\t     if (!$fp) {\r\n\t    \t\techo \"Unable to open $device\\n\";\r\n\t\t\t\t} else {\r\n\t\t       fwrite($fp,\"attg\\r\");\r\n\t\t\t     sleep(1);\r\n\t\t\t     $x = '';\r\n\t\t\t     while (!feof($fp)) {\r\n\t\t         $row = fgets($fp,1024);\r\n\t\t         if (strstr($row,'NO')) if ($verbose) exit(\"ERROR\\n\"); else exit();\r\n\t\t         if (strstr($row,'OK')) break;\r\n\t\t         if (strstr($row,':')) $x = $row;\r\n\t\t       }\r\n\t\t\t     fclose($fp);\r\n\t\t\t     echo $x;\r\n        }\r\n        exit;\r\n      }\r\n   print_usage();\r\n   exit;\r\n   } else\r\n\r\n   if (isset($options[\"s\"])) {\r\n       if ($argc == 1) {\r\n\t\t      $fp=fopen($device,'r+b');\r\n\t\t      if (!$fp) {\r\n\t\t    \t\t echo \"Unable to open $device\\n\";\r\n\t\t\t\t\t} else {\r\n\t\t\t       $x = date('Ymd H:i:s');\r\n\t\t\t\t     fwrite($fp,\"atts$x\\r\");\r\n\t\t\t\t     sleep(2);\r\n\t\t\t\t     $res=fread($fp,80);\r\n\t\t\t\t     if (!strstr($res,'OK')) if ($verbose) exit(\"ERROR\\n\"); else exit();\r\n\t\t\t\t     fclose($fp);\r\n\t\t\t    }\r\n\t\t\t   print_usage();\r\n\t\t\t   exit;\r\n       }\r\n\t\t\t   print_usage();\r\n\t\t\t   exit;    \r\n\t\t} else {\r\n\t\t   print_usage();\r\n\t\t   exit;\r\n}\r\n?>\r\n\r\n",
+    "env": []
+  },
+  {
+    "id": "407b194b.8886e8",
+    "type": "serial in",
+    "z": "48ddb88.87e3e48",
+    "name": "",
+    "serial": "4c0cd345.bee2ac",
+    "x": 332.0000190734863,
+    "y": 121.99999904632568,
+    "wires": [
+      [
+        "d27593ca.20016"
+      ]
+    ]
+  },
+  {
+    "id": "d27593ca.20016",
+    "type": "function",
+    "z": "48ddb88.87e3e48",
+    "name": "Read parser",
+    "func": "function hexdec(input) {\n    input = (input + '').replace(/[^a-f0-9]/gi, '');\n    return parseInt(input, 16);\n}\n\nif(msg.payload.includes('=')) {\n    var tmp = msg.payload.split('=');\n    var data = {\n       reg: hexdec('0x' + tmp[0]),\n       value: hexdec('0x' + tmp[1])\n    };\n   \n    if (data.value > 32767) {\n       data.value -= 65536;\n    }\n   \n    if(data.reg >= 0 && data.reg <= 127) {\n        msg = {\n            topic: 'thermiq/state/' + data.reg,\n            payload: data.value\n        };\n        \n        return [msg, null];\n    }\n}\n\nreturn [null, null];",
+    "outputs": 2,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 549.4999923706055,
+    "y": 120.00000190734863,
+    "wires": [
+      [
+        "1d9876ef.8ecd79"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "1d9876ef.8ecd79",
+    "type": "mqtt out",
+    "z": "48ddb88.87e3e48",
+    "name": "thermiq/state/#",
+    "topic": "",
+    "qos": "",
+    "retain": "",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "ab0ac09d.da3f9",
+    "x": 767.4999732971191,
+    "y": 114,
+    "wires": []
+  },
+  {
+    "id": "9438d42f.c7dde8",
+    "type": "function",
+    "z": "48ddb88.87e3e48",
+    "name": "Write parser",
+    "func": "function hexdec(input) {\n    input = (input + '').replace(/[^a-f0-9]/gi, '');\n    return parseInt(input, 16);\n}\n\nvar reg = parseInt(\n            msg.topic.substring(\n                msg.topic.lastIndexOf('/') + 1\n            )) + 128;\n            \nvar value = parseInt(msg.payload);\nif(value < 0) {\n    value += 65536;\n}\n\nif(reg >= 0 && reg <= 255 && value >= 0 && value < 65536) {\n    var valueHI = (value & 65280) >> 8;\n    var valueLO = (value & 255);\n    var a = reg.toString(16).padStart(2, '0');\n    var b = valueLO.toString(16).padStart(2, '0');\n    var c = valueHI.toString(16).padStart(2, '0');\n\n    var out = {\n        payload: ('ATW' + a + c + b).toUpperCase()\n    };\n\n    return [out, null];\n}\n\nreturn [null, null];\n",
+    "outputs": 2,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 548.9999694824219,
+    "y": 185.9999485015869,
+    "wires": [
+      [
+        "fad5e46b.97d518",
+        "99406082dbff6ab3"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "fad5e46b.97d518",
+    "type": "serial out",
+    "z": "48ddb88.87e3e48",
+    "name": "",
+    "serial": "4c0cd345.bee2ac",
+    "x": 773.0142593383789,
+    "y": 179.00560760498047,
+    "wires": []
+  },
+  {
+    "id": "b191a81843c530f6",
+    "type": "trigger",
+    "z": "48ddb88.87e3e48",
+    "name": "Read registers 0-32 / 50 - 116",
+    "op1": "ATR0020",
+    "op2": "ATR3274",
+    "op1type": "str",
+    "op2type": "str",
+    "duration": "5",
+    "extend": false,
+    "overrideDelay": false,
+    "units": "s",
+    "reset": "",
+    "bytopic": "all",
+    "topic": "topic",
+    "outputs": 1,
+    "x": 590,
+    "y": 300,
+    "wires": [
+      [
+        "252c1115f8b1128a"
+      ]
+    ]
+  },
+  {
+    "id": "da86e6940c4b196a",
+    "type": "inject",
+    "z": "48ddb88.87e3e48",
+    "name": "Interval reading",
+    "props": [],
+    "repeat": "60",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "x": 330,
+    "y": 300,
+    "wires": [
+      [
+        "b191a81843c530f6"
+      ]
+    ]
+  },
+  {
+    "id": "252c1115f8b1128a",
+    "type": "serial out",
+    "z": "48ddb88.87e3e48",
+    "name": "",
+    "serial": "4c0cd345.bee2ac",
+    "x": 840,
+    "y": 300,
+    "wires": []
+  },
+  {
+    "id": "d973a10d68722cde",
+    "type": "mqtt in",
+    "z": "48ddb88.87e3e48",
+    "name": "thermiq/command/#",
+    "topic": "thermiq/command/#",
+    "qos": "2",
+    "datatype": "auto",
+    "broker": "ab0ac09d.da3f9",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 330,
+    "y": 200,
+    "wires": [
+      [
+        "9438d42f.c7dde8"
+      ]
+    ]
+  },
+  {
+    "id": "99406082dbff6ab3",
+    "type": "delay",
+    "z": "48ddb88.87e3e48",
+    "name": "",
+    "pauseType": "delay",
+    "timeout": "500",
+    "timeoutUnits": "milliseconds",
+    "rate": "1",
+    "nbRateUnits": "1",
+    "rateUnits": "second",
+    "randomFirst": "1",
+    "randomLast": "5",
+    "randomUnits": "seconds",
+    "drop": false,
+    "allowrate": false,
+    "outputs": 1,
+    "x": 570,
+    "y": 240,
+    "wires": [
+      [
+        "b191a81843c530f6"
+      ]
+    ]
+  },
+  {
+    "id": "4c0cd345.bee2ac",
+    "type": "serial-port",
+    "serialport": "/dev/ttyACM0",
+    "serialbaud": "9600",
+    "databits": "8",
+    "parity": "none",
+    "stopbits": "1",
+    "waitfor": "",
+    "dtr": "none",
+    "rts": "none",
+    "cts": "none",
+    "dsr": "none",
+    "newline": "\\n",
+    "bin": "false",
+    "out": "char",
+    "addchar": "\\r",
+    "responsetimeout": "10000"
+  },
+  {
+    "id": "ab0ac09d.da3f9",
+    "type": "mqtt-broker",
+    "name": "homeassistant",
+    "broker": "127.0.0.1",
+    "port": "1883",
+    "clientid": "",
+    "autoConnect": true,
+    "usetls": false,
+    "compatmode": false,
+    "protocolVersion": "4",
+    "keepalive": "60",
+    "cleansession": true,
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthPayload": "",
+    "birthMsg": {},
+    "closeTopic": "",
+    "closeQos": "0",
+    "closePayload": "",
+    "closeMsg": {},
+    "willTopic": "",
+    "willQos": "0",
+    "willPayload": "",
+    "willMsg": {},
+    "sessionExpiry": ""
+  }
+]

@@ -1,0 +1,21 @@
+- platform: mqtt
+  unique_id: thermiq_rum_bor
+  name: Thermiq Rum, bör
+  modes: ['off', 'auto']
+  temperature_unit : "C"
+  min_temp: 16.0
+  max_temp: 30.0
+  precision: 1.0
+  current_temperature_topic: "thermiq/state/50"
+  current_temperature_template: "{{ value | int }}"
+  temperature_command_topic: "thermiq/command/50"
+  temperature_command_template: "{{ value | int }}"
+  temperature_state_topic: "thermiq/state/50"
+  temperature_state_template: "{{ value | int }}"
+  mode_state_topic: "thermiq/state/51"
+  mode_state_template: >
+    {% if value | int == 0 %}
+      off
+    {% else %}
+      auto
+    {% endif %}

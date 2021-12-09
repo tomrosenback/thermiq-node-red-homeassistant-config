@@ -1,0 +1,225 @@
+
+- platform: mqtt
+  state_topic: "thermiq/state/0"
+  name: "Thermiq Ute"
+  unique_id: thermiq_ute
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+
+- platform: mqtt
+  state_topic: "thermiq/state/1"
+  name: "Thermiq Inne"
+  unique_id: thermiq_inne
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+
+- platform: mqtt
+  state_topic: "thermiq/state/3"
+  name: "Thermiq Rum, bör"
+  unique_id: thermiq_rum_bor
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+
+- platform: mqtt
+  state_topic: "thermiq/state/5"
+  name: "Thermiq Framledning"
+  unique_id: thermiq_framledning
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+
+
+- platform: mqtt
+  state_topic: "thermiq/state/6"
+  name: "Thermiq Returledning"
+  unique_id: thermiq_returledning
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+
+- platform: mqtt
+  state_topic: "thermiq/state/7"
+  name: "Thermiq Varmvatten"
+  unique_id: thermiq_varmvatten
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+
+- platform: mqtt
+  state_topic: "thermiq/state/8"
+  name: "Thermiq Brine, ut"
+  unique_id: thermiq_brine_ut
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+
+- platform: mqtt
+  state_topic: "thermiq/state/9"
+  name: "Thermiq Brine, in"
+  unique_id: thermiq_brine_in
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+
+- platform: mqtt
+  state_topic: "thermiq/state/10"
+  name: "Thermiq Kylning"
+  unique_id: thermiq_kylning
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+
+- platform: mqtt
+  state_topic: "thermiq/state/11"
+  name: "Thermiq Framledning, shunt"
+  unique_id: thermiq_framledning_shunt
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+
+- platform: mqtt
+  state_topic: "thermiq/state/12"
+  name: "Thermiq Strömförbrukning"
+  unique_id: thermiq_stromforbrukning
+  icon: mdi:thermometer
+  unit_of_measurement: "A"
+
+- platform: mqtt
+  state_topic: "thermiq/state/13"
+  name: "Thermiq 13 Tillsatser binary"
+  unique_id: thermiq_13_tillsatser_binary
+
+- platform: mqtt
+  state_topic: "thermiq/state/14"
+  name: "Thermiq Framledning, bör"
+  unique_id: thermiq_framledning_bor
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+
+- platform: mqtt
+  state_topic: "thermiq/state/15"
+  name: "Thermiq Framledning, shunt, bör"
+  unique_id: thermiq_framledning_shunt_bor
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+
+- platform: mqtt
+  state_topic: "thermiq/state/16"
+  name: "Thermiq 16 Pump status binary"
+  unique_id: thermiq_16_pump_status_binary
+
+- platform: mqtt
+  state_topic: "thermiq/state/17"
+  name: "Thermiq 17 Shunt status binary"
+  unique_id: thermiq_17_shunt_status_binary
+
+- platform: mqtt
+  state_topic: "thermiq/state/18"
+  name: "Thermiq PWM ut"
+  unique_id: thermiq_pwm_ut
+
+- platform: mqtt
+  state_topic: "thermiq/state/19"
+  name: "Thermiq 19 Larm pump binary"
+  unique_id: thermiq_19_larm_pump_binary
+
+- platform: mqtt
+  state_topic: "thermiq/state/20"
+  name: "Thermiq 20 Larm givare binary"
+  unique_id: thermiq_20_larm_givare_binary
+
+- platform: mqtt
+  state_topic: "thermiq/state/21"
+  name: "Thermiq Behov 1"
+  unique_id: thermiq_behov_1
+
+- platform: mqtt
+  state_topic: "thermiq/state/22"
+  name: "Thermiq Behov 2"
+  unique_id: thermiq_behov_2
+
+- platform: mqtt
+  state_topic: "thermiq/state/23"
+  name: "Thermiq Tryckrör"
+  unique_id: thermiq_tryckror
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+
+- platform: mqtt
+  state_topic: "thermiq/state/24"
+  name: "Thermiq Varmvatten framledning"
+  unique_id: thermiq_varmvatten_framledning
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+  
+- platform: mqtt
+  state_topic: "thermiq/state/25"
+  name: "Thermiq Integral"
+  unique_id: thermiq_integral
+  icon: mdi:thermometer
+  unit_of_measurement: "°C min"
+  
+- platform: mqtt
+  state_topic: "thermiq/state/30"
+  name: "Thermiq Cirkulationspump, hastighet"
+  unique_id: thermiq_cirkulationspump_hastighet
+  icon: mdi:pump
+  unit_of_measurement: "%"
+  
+- platform: mqtt
+  state_topic: "thermiq/state/31"
+  name: "Thermiq Brinepump, hastighet"
+  unique_id: thermiq_brinepump_hastighet
+  icon: mdi:pump
+  unit_of_measurement: "%"
+
+- platform: mqtt
+  state_topic: "thermiq/state/64"
+  name: "Thermiq Shuntkurva, bör"
+  unique_id: thermiq_shuntkurva_bor
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+
+- platform: mqtt
+  state_topic: "thermiq/state/65"
+  name: "Thermiq Shuntkurva, är"
+  unique_id: thermiq_shuntkurva_ar
+  icon: mdi:thermometer
+  unit_of_measurement: "°C"
+
+- platform: mqtt
+  state_topic: "thermiq/state/104"
+  name: "Thermiq Drifttid, kompressor"
+  unique_id: thermiq_drifttid_kompressor
+  icon: mdi:clock-outline
+  unit_of_measurement: "h"
+
+- platform: mqtt
+  state_topic: "thermiq/state/106"
+  name: "Thermiq Drifttid, tillsats, 3kW"
+  unique_id: thermiq_drifttid_tillsats_3kw
+  icon: mdi:clock-outline
+  unit_of_measurement: "h"
+
+- platform: mqtt
+  state_topic: "thermiq/state/108"
+  name: "Thermiq Drifttid, varmvatten produktion med kompressor"
+  unique_id: thermiq_drifttid_varmvattenproduktion_med_kompressor
+  icon: mdi:clock-outline
+  unit_of_measurement: "h"
+  
+- platform: mqtt
+  state_topic: "thermiq/state/110"
+  name: "Thermiq Drifttid, passiv kyla"
+  unique_id: thermiq_drifttid_passiv_kyla
+  icon: mdi:clock-outline
+  unit_of_measurement: "h"
+  
+- platform: mqtt
+  state_topic: "thermiq/state/112"
+  name: "Thermiq Drifttid, aktiv kyla"
+  unique_id: thermiq_drifttid_aktiv_kyla
+  icon: mdi:clock-outline
+  unit_of_measurement: "h"
+
+- platform: mqtt
+  state_topic: "thermiq/state/114"
+  name: "Thermiq Drifttid, tillsats, 6kW"
+  unique_id: thermiq_drifttid_tillsats_6kw
+  icon: mdi:clock-outline
+  unit_of_measurement: "h"
+
+

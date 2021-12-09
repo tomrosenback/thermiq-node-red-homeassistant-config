@@ -1,0 +1,10 @@
+
+  thermiq_mode:
+    name: "Läge"
+    icon: mdi:adjust
+    options:
+      - "Avstängd"
+      - "Auto"
+      - "Värmepump"
+      - "Tillsats"
+      - "Varmvatten"

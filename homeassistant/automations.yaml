@@ -1,0 +1,55 @@
+- alias: Thermiq mode select
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_select.thermiq_mode
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: thermiq/command/51
+      payload_template: '{% set modes = { ''Avstängd'': 0, ''Auto'': 1, ''Värmepump'':
+        2, ''Tillsats'': 3, ''Varmvatten'': 4 } %}
+
+        {{ modes[trigger.to_state.state] }}
+
+        '
+  mode: single
+- alias: Thermiq mode callback
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: thermiq/state/51
+  condition: []
+  action:
+  - service: automation.turn_off
+    target:
+      entity_id: automation.set_thermiq_mode
+  - service: input_select.select_option
+    target:
+      entity_id: input_select.thermiq_mode
+    data:
+      option: '{% set modes = [ ''Avstängd'', ''Auto'', ''Värmepump'', ''Tillsats'',
+        ''Varmvatten'' ] %}
+
+        {{ modes[trigger.payload | int] }}
+
+        '
+  - service: automation.turn_on
+    target:
+      entity_id: automation.set_thermiq_mode
+  mode: single
+- alias: 'Alarm: Bergvärmepump'
+  description: ''
+  trigger:
+  - platform: event
+    event_type: state_changed
+  condition:
+  - condition: template
+    value_template: "{{ trigger.event.data.entity_id.startswith('binary_sensor.thermiq_larm_')\n\
+      \   and trigger.event.data.entity_id != 'binary_sensor.thermiq_larm_givare_innetemperatur'\n\
+      \   and trigger.event.data.old_state is not none\n   and trigger.event.data.old_state.state\
+      \ == 'off' \n   and trigger.event.data.new_state is not none\n   and trigger.event.data.new_state.state\
+      \ == 'on' }}\n"
+  action:
+  mode: single

@@ -1,0 +1,55 @@
+- title: Värmepump
+  path: varmepump
+  badges: []
+  cards:
+    - type: entities
+      entities:
+        - entity: sensor.thermiq_ute
+        - entity: sensor.thermiq_varmvatten
+        - entity: sensor.thermiq_brine_in
+        - entity: sensor.thermiq_brine_ut
+        - entity: sensor.thermiq_framledning
+        - entity: sensor.thermiq_returledning
+        - entity: sensor.thermiq_tryckror
+      title: Temperaturer
+    - type: sensor
+      graph: line
+      entity: sensor.thermiq_varmvatten
+      hours_to_show: 72
+      detail: 2
+    - type: entities
+      entities:
+        - entity: input_select.thermiq_mode
+    - type: entities
+      entities:
+        - entity: binary_sensor.thermiq_pump_status_brinepump
+        - entity: binary_sensor.thermiq_pump_status_cirkulationspump
+        - entity: binary_sensor.thermiq_pump_status_compressor
+        - entity: binary_sensor.thermiq_status_tillsats_3kw
+        - entity: binary_sensor.thermiq_status_tillsats_6kw
+        - entity: binary_sensor.thermiq_pump_status_varmvattenproduktion
+        - entity: sensor.thermiq_integral
+      title: Pump
+    - type: entities
+      entities:
+        - binary_sensor.thermiq_larm_givare_framledning
+        - binary_sensor.thermiq_larm_pump_hogt_pressostat_tryck
+        - binary_sensor.thermiq_larm_givare_inkorrekt_fasfoljd
+        - binary_sensor.thermiq_larm_pump_lag_brine_temp
+        - binary_sensor.thermiq_larm_pump_lagt_brine_flode
+        - binary_sensor.thermiq_larm_pump_lagt_pressostat_tryck
+        - binary_sensor.thermiq_larm_pump_motorskydd
+        - binary_sensor.thermiq_larm_givare_return
+        - binary_sensor.thermiq_larm_givare_utomhus
+        - binary_sensor.thermiq_larm_givare_varmvattentemperatur
+        - binary_sensor.thermiq_larm_givare_overhettning
+        - binary_sensor.thermiq_larm_givare_innetemperatur
+      title: Larm
+    - type: entities
+      entities:
+        - sensor.thermiq_drifttid_kompressor
+        - sensor.thermiq_drifttid_tillsats_3kw
+        - sensor.thermiq_drifttid_tillsats_6kw
+        - sensor.thermiq_drifttid_varmvatten_produktion_med_kompressor
+    - type: thermostat
+      entity: climate.thermiq_rum_bor

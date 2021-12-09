@@ -1,0 +1,93 @@
+- platform: template
+  sensors:
+    thermiq_status_tillsats_6kw:
+      unique_id: thermiq_status_tillsats_6kw
+      friendly_name: "Thermiq Tillsats, 6kW"
+      value_template: "{{ states('sensor.thermiq_13_tillsatser_binary')|int(0)|bitwise_and(2) > 0 }}"
+    thermiq_status_tillsats_3kw:
+      unique_id: thermiq_status_tillsats_3kw
+      friendly_name: "Thermiq Tillsats, 3kW"
+      value_template: "{{ states('sensor.thermiq_13_tillsatser_binary')|int(0)|bitwise_and(1) > 0 }}"
+
+    thermiq_pump_status_tillsats_1:
+      unique_id: thermiq_pump_status_tillsats_1
+      friendly_name: "Thermiq Tillsats 1"
+      value_template: "{{ states('sensor.thermiq_16_pump_status_binary')|int(0)|bitwise_and(128) > 0 }}"
+    thermiq_pump_status_shunt_positive:
+      unique_id: thermiq_pump_status_shunt_positive
+      friendly_name: "Thermiq Shunt+"
+      value_template: "{{ states('sensor.thermiq_16_pump_status_binary')|int(0)|bitwise_and(64) > 0 }}"
+    thermiq_pump_status_shunt_minus:
+      unique_id: thermiq_pump_status_shunt_minus
+      friendly_name: "Thermiq Shunt-"
+      value_template: "{{ states('sensor.thermiq_16_pump_status_binary')|int(0)|bitwise_and(32) > 0 }}"
+    thermiq_pump_status_tillsats_2:
+      unique_id: thermiq_pump_status_tillsats_2
+      friendly_name: "Thermiq Tillsats 2"
+      value_template: "{{ states('sensor.thermiq_16_pump_status_binary')|int(0)|bitwise_and(16) > 0 }}"
+    thermiq_pump_status_varmvattenproduktion:
+      unique_id: thermiq_pump_status_varmvattenproduktion
+      friendly_name: "Thermiq Varmvattenproduktion"
+      value_template: "{{ states('sensor.thermiq_16_pump_status_binary')|int(0)|bitwise_and(8) > 0 }}"
+    thermiq_pump_status_cirkulationspump:
+      unique_id: thermiq_pump_status_cirkulationspump
+      friendly_name: "Thermiq Cirkulationspump"
+      value_template: "{{ states('sensor.thermiq_16_pump_status_binary')|int(0)|bitwise_and(4) > 0 }}"
+    thermiq_pump_status_compressor:
+      unique_id: thermiq_pump_status_compressor
+      friendly_name: "Thermiq Kompressor"
+      value_template: "{{ states('sensor.thermiq_16_pump_status_binary')|int(0)|bitwise_and(2) > 0 }}"
+    thermiq_pump_status_brinepump:
+      unique_id: thermiq_pump_status_brinepump
+      friendly_name: "Thermiq Brinepump"
+      value_template: "{{ states('sensor.thermiq_16_pump_status_binary')|int(0)|bitwise_and(1) > 0 }}"
+
+    thermiq_larm_pump_lag_brine_temp:
+      unique_id: thermiq_larm_pump_lag_brine_temp
+      friendly_name: "Thermiq Larm låg brine temp"
+      value_template: "{{ states('sensor.thermiq_19_larm_pump_binary')|int(0)|bitwise_and(16) > 0 }}"
+    thermiq_larm_pump_lagt_brine_flode:
+      unique_id: thermiq_larm_pump_lagt_brine_flode
+      friendly_name: "Thermiq Larm låg brine temp"
+      value_template: "{{ states('sensor.thermiq_19_larm_pump_binary')|int(0)|bitwise_and(8) > 0 }}"
+    thermiq_larm_pump_motorskydd:
+      unique_id: thermiq_larm_pump_motorskydd
+      friendly_name: "Thermiq Larm motorskydd"
+      value_template: "{{ states('sensor.thermiq_19_larm_pump_binary')|int(0)|bitwise_and(4) > 0 }}"
+    thermiq_larm_pump_lagt_pressostat_tryck:
+      unique_id: thermiq_larm_pump_lagt_pressostat_tryck
+      friendly_name: "Thermiq Larm Lågt pressostat tryck"
+      value_template: "{{ states('sensor.thermiq_19_larm_pump_binary')|int(0)|bitwise_and(2) > 0 }}"
+    thermiq_larm_pump_hogt_pressostat_tryck:
+      unique_id: thermiq_larm_pump_hogt_pressostat_tryck
+      friendly_name: "Thermiq Larm Högt pressostat tryck"
+      value_template: "{{ states('sensor.thermiq_19_larm_pump_binary')|int(0)|bitwise_and(1) > 0 }}"
+
+    thermiq_larm_givare_overhettning:
+      unique_id: thermiq_larm_givare_overhettning
+      friendly_name: "Thermiq Larm overhettning"
+      value_template: "{{ states('sensor.thermiq_20_larm_givare_binary')|int(0)|bitwise_and(64) > 0 }}"
+    thermiq_larm_givare_inkorrekt_fasfoljd:
+      unique_id: thermiq_larm_givare_inkorrekt_fasfoljd
+      friendly_name: "Thermiq Larm inkorrekt fasföljd"
+      value_template: "{{ states('sensor.thermiq_20_larm_givare_binary')|int(0)|bitwise_and(32) > 0 }}"
+    thermiq_larm_givare_innetemperatur:
+      unique_id: thermiq_larm_givare_innetemperatur
+      friendly_name: "Thermiq Larm inomhusgivare"
+      value_template: "{{ states('sensor.thermiq_20_larm_givare_binary')|int(0)|bitwise_and(16) > 0 }}"
+    thermiq_larm_givare_varmvattentemperatur:
+      unique_id: thermiq_larm_givare_varmvattentemperatur
+      friendly_name: "Thermiq Larm varmvatten temperature givare"
+      value_template: "{{ states('sensor.thermiq_20_larm_givare_binary')|int(0)|bitwise_and(8) > 0 }}"
+    thermiq_larm_givare_return:
+      unique_id: thermiq_larm_givare_return
+      friendly_name: "Thermiq Larm retur temperaturgivare"
+      value_template: "{{ states('sensor.thermiq_20_larm_givare_binary')|int(0)|bitwise_and(4) > 0 }}"
+    thermiq_larm_givare_framledning:
+      unique_id: thermiq_larm_givare_framledning
+      friendly_name: "Thermiq Larm framledning temperaturgivare"
+      value_template: "{{ states('sensor.thermiq_20_larm_givare_binary')|int(0)|bitwise_and(2) > 0 }}"
+    thermiq_larm_givare_utomhus:
+      unique_id: thermiq_larm_givare_utomhus
+      friendly_name: "Thermiq Utomhus temperaturgivare"
+      value_template: "{{ states('sensor.thermiq_20_larm_givare_binary')|int(0)|bitwise_and(1) > 0 }}"        
