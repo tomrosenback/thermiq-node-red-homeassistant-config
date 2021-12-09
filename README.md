@@ -6,7 +6,7 @@
   - Automations to take action on mode selector changes and respectively on MQTT message to change selector
 
 # Requirements
-* (ThermIQ USB device)[https://www.thermiq.net/hw/] connected to supported heatpump
+* [ThermIQ USB device](https://www.thermiq.net/hw/) connected to supported heatpump
 * Node-RED
 * MQTT broker
 * Home Assistant for UI
