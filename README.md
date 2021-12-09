@@ -6,5 +6,5 @@
 ** Automations to take action on mode selector changes and respectively on MQTT message to change selector
 
 # Screenshots
-![UI](images/lovelace-screenshot.jpg?raw=true "Lovelace")
-![UI](images/node-red-screenshot.jpg?raw=true "Node-RED")
+![UI](images/lovelace-screenshot.png?raw=true "Lovelace")
+![UI](images/node-red-screenshot.png?raw=true "Node-RED")
